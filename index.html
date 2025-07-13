@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Angel Next Door Spoils Me Rotten</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+        }   
+        .anime-gradient {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .pink-gradient {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%);
+        }
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        .floating-hearts {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+        .heart {
+            position: absolute;
+            color: #ff69b4;
+            font-size: 20px;
+            animation: float 6s ease-in-out infinite;
+        }
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        .fade-in {
+            animation: fadeIn 0.8s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .slide-in {
+            animation: slideIn 0.6s ease-out;
+        }
+        @keyframes slideIn {
+            from { transform: translateX(-50px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        .star-rating {
+            color: #ffd700;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .episode-progress {
+            width: 0%;
+            height: 4px;
+            background: linear-gradient(90deg, #ff69b4, #667eea);
+            transition: width 0.3s ease;
+        }
+        .character-card {
+            background: linear-gradient(145deg, #f0f4f8, #e2e8f0);
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        }
+        .news-ticker {
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            color: white;
+            padding: 8px 0;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+        .news-ticker p {
+            display: inline-block;
+            animation: scroll 15s linear infinite;
+        }
+        @keyframes scroll {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
+        }
+        .theme-selector {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 100;
+        }
+        .dark-theme {
+            background-color: #1a1a2e;
+            color: #fff;
+        }
+        .dark-theme .bg-white {
+            background-color: #16213e !important;
+        }
+        .dark-theme .text-gray-800 {
+            color: #e2e8f0 !important;
+        }
+        .dark-theme .text-gray-600 {
+            color: #a0aec0 !important;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Floating Hearts Animation -->
+    <div class="floating-hearts" id="heartsContainer"></div>
+    <!-- Theme Selector -->
+    <div class="theme-selector">
+        <button id="themeToggle" class="bg-purple-600 text-white px-4 py-2 rounded-full hover:bg-purple-700 transition">
+            🌙 Dark
+        </button>
+    </div>
+    <!-- News Ticker -->
+    <div class="news-ticker">
+        <p>  Episodes Available! |  Season 2 Confirmed! |  New Opening Theme Released! |  Light Novel Volume 12 Out!</p>
+    </div>
+    <!-- Navigation -->
+    <nav class="anime-gradient shadow-lg sticky top-0 z-50">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center py-4">
+                <div class="flex items-center space-x-4">
+                    <div class="text-white font-bold text-xl"> Angel Next Door</div>
+                </div>
+                <div class="hidden md:flex space-x-6">
+                    <a href="#home" class="text-white hover:text-pink-200 transition">Home</a>
+                    <a href="#characters" class="text-white hover:text-pink-200 transition">Characters</a>
+                    <a href="#episodes" class="text-white hover:text-pink-200 transition">Episodes</a>
+                    <a href="#gallery" class="text-white hover:text-pink-200 transition">Gallery</a>
+                    <a href="#reviews" class="text-white hover:text-pink-200 transition">Reviews</a>
+                    <a href="#news" class="text-white hover:text-pink-200 transition">News</a>
+                </div>
+                <button id="mobileMenu" class="md:hidden text-white">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </nav>
+    <!-- Mobile Menu -->
+    <div id="mobileMenuContent" class="hidden md:hidden anime-gradient">
+        <div class="container mx-auto px-4 py-4">
+            <a href="#home" class="block text-white py-2 hover:text-pink-200">Home</a>
+            <a href="#characters" class="block text-white py-2 hover:text-pink-200">Characters</a>
+            <a href="#episodes" class="block text-white py-2 hover:text-pink-200">Episodes</a>
+            <a href="#gallery" class="block text-white py-2 hover:text-pink-200">Gallery</a>
+            <a href="#reviews" class="block text-white py-2 hover:text-pink-200">Reviews</a>
+            <a href="#news" class="block text-white py-2 hover:text-pink-200">News</a>
+        </div>
+    </div>
+    <!-- Hero Section -->
+    <section id="home" class="pink-gradient py-20">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col lg:flex-row items-center">
+                <div class="lg:w-1/2 text-center lg:text-left fade-in">
+                    <h1 class="text-4xl lg:text-6xl font-bold text-gray-800 mb-6">
+                        The Angel Next Door Spoils Me Rotten
+                    </h1>
+                    <p class="text-xl text-gray-600 mb-8">
+                        A heartwarming romantic comedy about Amane and his angelic neighbor Mahiru who changes his life in the most unexpected ways.
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                        <a href="https://aniwave.at/anime/143338"><button class="bg-purple-600 text-white px-8 py-3 rounded-full hover:bg-purple-700 transition">
+                            Watch Now
+                        </button></a>
+                        <a href="https://mangadex.org/title/2fec6641-beb1-4ae9-a32f-204dd06688ac/the-angel-next-door-spoils-me-rotten"><button class="bg-white text-purple-600 px-8 py-3 rounded-full hover:bg-gray-100 transition">
+                            Read Manga
+                        </button></a>
+                    </div>
+                </div>
+                <div class="lg:w-1/2 mt-10 lg:mt-0">
+                    <div class="relative">
+                        <div class="w-80 h-80 bg-white rounded-full mx-auto flex items-center justify-center text-6xl animate-pulse">
+                            <img src="https://images7.alphacoders.com/129/1297416.png" alt="" style="width: 320px;height: 320px;border-radius: 50%;object-fit: cover;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Characters Section -->
+    <section id="characters" class="py-20 bg-white">
+        <div class="container mx-auto px-4">
+            <h2 class="text-4xl font-bold text-center text-gray-800 mb-12">Main Characters</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="character-card card-hover fade-in">
+                    <div class="text-center">
+                        <div class="w-32 h-32 bg-pink-200 rounded-full mx-auto mb-4 flex items-center justify-center text-4xl">
+                            <img src="https://tse3.mm.bing.net/th/id/OIP.ePmz_78FCMFbVdN6Wex-ZQHaHa?r=0&rs=1&pid=ImgDetMain&o=7&rm=3" alt="" style="width: 150px;height: 150px;border-radius: 50%;object-fit: cover;">
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-800 mb-2">Shiina Mahiru</h3>
+                        <p class="text-gray-600 mb-4">The perfect "angel" student who lives next door</p>
+                        <div class="flex justify-center space-x-2">
+                            <span class="bg-pink-100 text-pink-600 px-2 py-1 rounded text-sm">Kind</span>
+                            <span class="bg-blue-100 text-blue-600 px-2 py-1 rounded text-sm">Caring</span>
+                            <span class="bg-purple-100 text-purple-600 px-2 py-1 rounded text-sm">Perfect</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="character-card card-hover fade-in">
+                    <div class="text-center">
+                        <div class="w-32 h-32 bg-blue-200 rounded-full mx-auto mb-4 flex items-center justify-center text-4xl">
+                            <img src="https://cdn.wallpapersafari.com/91/29/BnDG2l.jpg" alt="" style="width: 150px;height: 150px;border-radius: 50%;object-fit: cover;">
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-800 mb-2">Fujimiya Amane</h3>
+                        <p class="text-gray-600 mb-4">A lazy student whose life changes after meeting Mahiru</p>
+                        <div class="flex justify-center space-x-2">
+                            <span class="bg-green-100 text-green-600 px-2 py-1 rounded text-sm">Lazy</span>
+                            <span class="bg-yellow-100 text-yellow-600 px-2 py-1 rounded text-sm">Honest</span>
+                            <span class="bg-red-100 text-red-600 px-2 py-1 rounded text-sm">Caring</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Episodes Section -->
+    <section id="episodes" class="py-20 bg-gray-100">
+        <div class="container mx-auto px-4">
+            <h2 class="text-4xl font-bold text-center text-gray-800 mb-12">Episodes</h2>
+            <div class="max-w-4xl mx-auto">
+                <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+                    <h3 class="text-xl font-bold text-gray-800 mb-4">Episode Progress Tracker</h3>
+                    <div class="space-y-4">
+                        <div class="episode-item">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="font-semibold">Episode 1: The Angel Next Door</span>
+                                <span class="text-green-600">✓ Watched</span>
+                            </div>
+                            <div class="bg-gray-200 rounded-full h-2">
+                                <div class="episode-progress" style="width: 100%"></div>
+                            </div>
+                        </div>
+                        <div class="episode-item">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="font-semibold">Episode 2: A Relationship Changes</span>
+                                <span class="text-green-600">✓ Watched</span>
+                            </div>
+                            <div class="bg-gray-200 rounded-full h-2">
+                                <div class="episode-progress" style="width: 100%"></div>
+                            </div>
+                        </div>
+                        <div class="episode-item">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="font-semibold">Episode 3: Currently Watching</span>
+                                <span class="text-yellow-600">65% Complete</span>
+                            </div>
+                            <div class="bg-gray-200 rounded-full h-2">
+                                <div class="episode-progress" style="width: 65%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-white rounded-lg shadow-lg p-6 card-hover">
+                        <h3 class="text-xl font-bold text-gray-800 mb-2">Episode 1</h3>
+                        <p class="text-gray-600 mb-4">The beginning of Amane and Mahiru's story</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm text-gray-500">24 min</span>
+                            <a href="https://aniwave.at/watch/143338?host=pahe&ep=1&type=sub"><button class="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700">Watch</button>
+                        </a></div>
+                    </div>
+                    <div class="bg-white rounded-lg shadow-lg p-6 card-hover">
+                        <h3 class="text-xl font-bold text-gray-800 mb-2">Episode 2</h3>
+                        <p class="text-gray-600 mb-4">Their relationship starts to develop</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm text-gray-500">24 min</span>
+                            <a href="https://aniwave.at/watch/143338?host=pahe&ep=2&type=sub"><button class="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700">Watch</button>
+                        </a></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Interactive Gallery -->
+    <section id="gallery" class="py-20 bg-white">
+        <div class="container mx-auto px-4">
+            <h2 class="text-4xl font-bold text-center text-gray-800 mb-12">Gallery</h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                <div class="bg-pink-200 h-48 rounded-lg flex items-center justify-center text-4xl cursor-pointer hover:scale-105 transition card-hover" onclick="openModal('image1')" style="width: 300px; height:300px;border-radius: 10%;object-fit: cover;">
+                    <img src="https://tse3.mm.bing.net/th/id/OIP.vlHwVtTgm1eoiFSyDtQ9_wHaFj?r=0&rs=1&pid=ImgDetMain&o=7&rm=3" alt="" style="width: 300px;height: 300px;border-radius: 10%;object-fit: cover;">
+                </div>
+                <div class="bg-blue-200 h-48 rounded-lg flex items-center justify-center text-4xl cursor-pointer hover:scale-105 transition card-hover" onclick="openModal('image2')" style="width: 300px; height:300px;border-radius: 10%;object-fit: cover;">
+                    <img src="https://tse3.mm.bing.net/th/id/OIP.ohHCu9U7pmlfTCXJBwaCrwHaHU?r=0&rs=1&pid=ImgDetMain&o=7&rm=3" alt="" style="width: 300px;height: 300px;border-radius: 10%;object-fit: cover;">
+                </div>
+                <div class="bg-purple-200 h-48 rounded-lg flex items-center justify-center text-4xl cursor-pointer hover:scale-105 transition card-hover" onclick="openModal('image3')" style="width: 300px; height:300px;border-radius: 10%;object-fit: cover;">
+                    <img src="https://tse2.mm.bing.net/th/id/OIP.V3_8ade9zCLDXACmeC1RZQHaFS?r=0&rs=1&pid=ImgDetMain&o=7&rm=3" alt="" style="width: 300px;height: 300px;border-radius: 10%;object-fit: cover;">
+                </div>
+                <div class="bg-green-200 h-48 rounded-lg flex items-center justify-center text-4xl cursor-pointer hover:scale-105 transition card-hover" onclick="openModal('image4')" style="width: 300px; height:300px;border-radius: 10%;object-fit: cover;">
+                    <img src="https://tse4.mm.bing.net/th/id/OIP.tiOEtp0gtWslaaUpHWPWSgHaFS?r=0&rs=1&pid=ImgDetMain&o=7&rm=3" alt="" style="width: 300px;height: 300px;border-radius: 10%;object-fit: cover;">
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Reviews Section -->
+    <section id="reviews" class="py-20 bg-gray-100">
+        <div class="container mx-auto px-4">
+            <h2 class="text-4xl font-bold text-center text-gray-800 mb-12">Fan Reviews</h2>
+            <div class="max-w-4xl mx-auto">
+                <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-purple-200 rounded-full flex items-center justify-center text-xl mr-4">
+                            
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-gray-800">AnimeWatcher2024</h3>
+                            <div class="star-rating">★★★★★</div>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 mb-4">"This anime perfectly captures the essence of a slow-burn romance. The character development is incredible!"</p>
+                    <div class="flex space-x-4">
+                        <button class="text-blue-600 hover:text-blue-800" onclick="likeReview(this)">👍 <span>24</span></button>
+                        <button class="text-red-600 hover:text-red-800">❤️ 15</button>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-pink-200 rounded-full flex items-center justify-center text-xl mr-4">
+                            
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-gray-800">RomanceFan99</h3>
+                            <div class="star-rating">★★★★★</div>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 mb-4">"Mahiru is such an adorable character! The way she cares for Amane is heartwarming."</p>
+                    <div class="flex space-x-4">
+                        <button class="text-blue-600 hover:text-blue-800" onclick="likeReview(this)">👍 <span>18</span></button>
+                        <button class="text-red-600 hover:text-red-800">❤️ 32</button>
+                    </div>
+                </div>
+                <!-- Review Form -->
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h3 class="text-xl font-bold text-gray-800 mb-4">Write Your Review</h3>
+                    <form onsubmit="submitReview(event)">
+                        <div class="mb-4">
+                            <label class="block text-gray-700 mb-2">Rating</label>
+                            <div class="star-rating text-2xl">
+                                <span class="cursor-pointer" onclick="setRating(1)">☆</span>
+                                <span class="cursor-pointer" onclick="setRating(2)">☆</span>
+                                <span class="cursor-pointer" onclick="setRating(3)">☆</span>
+                                <span class="cursor-pointer" onclick="setRating(4)">☆</span>
+                                <span class="cursor-pointer" onclick="setRating(5)">☆</span>
+                            </div>
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-gray-700 mb-2">Your Review</label>
+                            <textarea class="w-full p-3 border rounded-lg" rows="4" placeholder="Share your thoughts about the anime..."></textarea>
+                        </div>
+                        <button type="submit" class="bg-purple-600 text-white px-6 py-2 rounded hover:bg-purple-700">Submit Review</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- News Section -->
+    <section id="news" class="py-20 bg-white">
+        <div class="container mx-auto px-4">
+            <h2 class="text-4xl font-bold text-center text-gray-800 mb-12">Latest News</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="bg-white rounded-lg shadow-lg overflow-hidden card-hover">
+                    <a href="https://aniwave.at/anime/170019"><div class="bg-gradient-to-r from-purple-500 to-pink-500 h-48 flex items-center justify-center text-white text-4xl" style="width: 400px; height: 500px;">
+                        <img src="https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx170019-rhMyASgt9tOq.jpg" alt="" style="width: 400px;height: 500px;object-fit: cover;">
+                    </div></a>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-gray-800 mb-2">Season 2 Confirmed!</h3>
+                        <p class="text-gray-600 mb-4">The second season has been officially announced and will air next year.</p>
+                        <span class="text-sm text-gray-500">2 days ago</span>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow-lg overflow-hidden card-hover">
+                    <a href="https://youtu.be/CmBwTp_embc?si=XJo4DjUKOYQ77j87"><div class="bg-gradient-to-r from-blue-500 to-purple-500 h-48 flex items-center justify-center text-white text-4xl" style="width: 400px; height: 500px;">
+                        <img src="https://hc-cdn.hel1.your-objectstorage.com/s/v3/c5a3b53b617ff1ec6c48b8cae8de1f06e363d80e_image.png" alt="" style="width: 400px;height: 500px;object-fit: cover;">
+                    </div></a>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-gray-800 mb-2">New Opening Theme</h3>
+                        <p class="text-gray-600 mb-4">A beautiful new opening theme has been released for the upcoming episodes.</p>
+                        <span class="text-sm text-gray-500">5 days ago</span>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow-lg overflow-hidden card-hover">
+                    <a href="https://www.novelupdates.com/series/otonari-no-tenshi-sama-ni-itsu-no-ma-ni-ka-dame-ningen-ni-sareteita-ken-wn/"><div class="bg-gradient-to-r from-green-500 to-blue-500 h-48 flex items-center justify-center text-white text-4xl" style="width: 400px; height: 500px;">
+                        <img src="https://cdn.novelupdates.com/images/2025/06/Otonari-no-Tenshisama-ni-Itsu-no-Ma-ni-ka-Dame-Ningen-ni-Sareteita-Ken-WN.jpg" alt="" style="width: 400px;height: 500px;object-fit: cover;">
+                    </div></a>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-gray-800 mb-2">Light Novel Update</h3>
+                        <p class="text-gray-600 mb-4">Volume 12 of the light novel series is now available in stores.</p>
+                        <span class="text-sm text-gray-500">1 week ago</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Footer -->
+    <footer class="anime-gradient text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-xl font-bold mb-4"> Angel Next Door</h3>
+                    <p class="text-gray-200">Your ultimate destination for everything about "The Angel Next Door Spoils Me Rotten"</p>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4">Quick Links</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#home" class="text-gray-200 hover:text-white">Home</a></li>
+                        <li><a href="#characters" class="text-gray-200 hover:text-white">Characters</a></li>
+                        <li><a href="#episodes" class="text-gray-200 hover:text-white">Episodes</a></li>
+                        <li><a href="#gallery" class="text-gray-200 hover:text-white">Gallery</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4">My Info</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-200 hover:text-white">Slack username: Hoshino_tls123</a></li>
+                        <li><a href="#" class="text-gray-200 hover:text-white">WhatsApp: +20 114 734 3850</a></li>
+                        <li><a href="https://github.com/Tareq-Khalil" class="text-gray-200 hover:text-white">github</a></li>
+                        <li><a href="#reviews" class="text-gray-200 hover:text-white">Reviews</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-600 mt-8 pt-8 text-center">
+                <p class="text-gray-200">&copy; 2025 Angel Next Door Fan Site. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+    <!-- Modal for Gallery -->
+    <div id="imageModal" class="modal">
+        <div class="bg-white rounded-lg p-6 max-w-2xl mx-4">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-bold">Gallery Image</h3>
+                <button onclick="closeModal()" class="text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
+            </div>
+            <div id="modalContent" class="text-center">
+                <!-- Dynamic content will be inserted here -->
+            </div>
+        </div>
+    </div>
+    <script>
+        // Mobile menu toggle
+        document.getElementById('mobileMenu').addEventListener('click', function() {
+            const menu = document.getElementById('mobileMenuContent');
+            menu.classList.toggle('hidden');
+        });
+        // Theme toggle
+        document.getElementById('themeToggle').addEventListener('click', function() {
+            document.body.classList.toggle('dark-theme');
+            const button = document.getElementById('themeToggle');
+            if (document.body.classList.contains('dark-theme')) {
+                button.textContent = '☀️ Light';
+            } else {
+                button.textContent = '🌙 Dark';
+            }
+        });
+        // Floating hearts animation
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.className = 'heart';
+            heart.innerHTML = '💕';
+            heart.style.left = Math.random() * 100 + '%';
+            heart.style.animationDelay = Math.random() * 2 + 's';
+            document.getElementById('heartsContainer').appendChild(heart);
+            
+            setTimeout(() => {
+                heart.remove();
+            }, 6000);
+        }
+        setInterval(createHeart, 2000);
+        
+</script>
+</body>
+</html>
