@@ -327,7 +327,6 @@
                 <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
                     <div class="flex items-center mb-4">
                         <div class="w-12 h-12 bg-purple-200 rounded-full flex items-center justify-center text-xl mr-4">
-                            
                         </div>
                         <div>
                             <h3 class="font-bold text-gray-800">AnimeWatcher2024</h3>
@@ -340,11 +339,9 @@
                         <button class="text-red-600 hover:text-red-800">❤️ 15</button>
                     </div>
                 </div>
-                
                 <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
                     <div class="flex items-center mb-4">
                         <div class="w-12 h-12 bg-pink-200 rounded-full flex items-center justify-center text-xl mr-4">
-                            
                         </div>
                         <div>
                             <h3 class="font-bold text-gray-800">RomanceFan99</h3>
@@ -459,7 +456,6 @@
                 <button onclick="closeModal()" class="text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
             </div>
             <div id="modalContent" class="text-center">
-                <!-- Dynamic content will be inserted here -->
             </div>
         </div>
     </div>
@@ -487,13 +483,12 @@
             heart.style.left = Math.random() * 100 + '%';
             heart.style.animationDelay = Math.random() * 2 + 's';
             document.getElementById('heartsContainer').appendChild(heart);
-            
             setTimeout(() => {
                 heart.remove();
             }, 6000);
         }
         setInterval(createHeart, 2000);
-        
 </script>
 </body>
+
 </html>
