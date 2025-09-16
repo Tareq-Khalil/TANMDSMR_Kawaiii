@@ -1,7 +1,6 @@
 # The Angel Next Door Spoils Me Rotten - Fan Website
 
-A comprehensive fan website for the anime series "The Angel Next Door Spoils Me Rotten" (Otonari no Tenshi-sama ni Itsu no Ma ni ka Dame Ningen ni Sareteita Ken). This project demonstrates modern web development techniques while providing an engaging platform for anime fans.
-
+A fan website for the anime series "The Angel Next Door Spoils Me Rotten" (Otonari no Tenshi-sama ni Itsu no Ma ni ka Dame Ningen ni Sareteita Ken).
 ## About the Project
 
 This website serves as a central hub for fans of the romantic comedy anime series. It combines informational content with interactive features to create an immersive fan experience. The site includes character profiles, episode tracking functionality, an image gallery, user reviews, and news updates.
@@ -103,20 +102,6 @@ Event-driven programming approach:
 - State management for theme and progress tracking
 - Animation control and cleanup
 
-## Performance Considerations
-
-### Loading Optimization
-- Single HTML file reduces HTTP requests
-- CDN-hosted external resources for caching
-- Optimized image sizes and formats
-- Efficient CSS and JavaScript bundling
-
-### Animation Performance
-- CSS transforms instead of layout changes
-- RequestAnimationFrame for smooth animations
-- Proper cleanup of animation timers
-- Hardware acceleration using transform3d
-
 ## External Integrations
 
 ### Streaming Platform Links
@@ -129,14 +114,6 @@ Direct integration with:
 ### Resource Loading
 - Tailwind CSS from cdnjs.cloudflare.com
 - Google Fonts API for typography
-- Optimized external resource loading
-
-
-### Local Development
-1. Clone the repository
-2. Open index.html in a browser
-3. Use browser developer tools for debugging
-4. Modify styles and scripts as needed
 
 ### File Structure
 ```
@@ -146,43 +123,9 @@ project/
 └── assets/            # External resources (if any)
 ```
 
-## Customization Guide
-
-### Color Scheme Modification
-Update CSS custom properties for:
-- Primary gradient colors
-- Secondary accent colors
-- Theme-specific color overrides
-
-### Adding New Sections
-1. Create semantic HTML structure
-2. Apply Tailwind utility classes
-3. Add custom CSS for unique styling
-4. Implement JavaScript functionality
-
-### Animation Customization
-Modify keyframe animations in CSS:
-- Adjust timing and easing functions
-- Change animation properties
-- Add new animation sequences
-
-## Future Enhancements
-
-### Potential Features
-- User authentication system
-- Comment system for reviews
-- Advanced search functionality
-- Social media integration
-- Progressive Web App features
-
-### Technical Improvements
-- Migration to modern JavaScript frameworks
-- API integration for dynamic content
-- Database backend for user data
-- Advanced caching strategies
-
 ## Developer Contact(zehaha)
 
 - Slack: Hoshino_tls123
 - WhatsApp: +20 114 734 3850
 - GitHub: Tareq-Khalil
+
